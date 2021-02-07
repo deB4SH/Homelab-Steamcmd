@@ -14,7 +14,7 @@ services:
   - docker:dind
 
 before_script:
-  - docker login registry.0x09.de:61001 -u $CIUSER -p $CITOKEN
+  - docker login registry.0x09.de:61001 -u "$CIUSER" -p "$CITOKEN"
 
 stages:
   - pre
