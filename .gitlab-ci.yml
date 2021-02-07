@@ -24,7 +24,7 @@ stages:
 
 versionset:
   stage: pre
-  image: maven:3.6.3-openjdk-16
+  image: oconnormi/dind-maven:latest
   tags:
     - homelab
   script:
