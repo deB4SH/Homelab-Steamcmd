@@ -14,7 +14,7 @@ services:
   - docker:dind
 
 before_script:
-  - docker login registry.0x09.de:61001 -u "$CIUSER" -p "$CITOKEN"
+  - docker login registry.0x09.de:61001 -u $CIUSER -p $CITOKEN
 
 stages:
   - pre
@@ -44,6 +44,7 @@ build:
     - mvn $MAVEN_CLI_OPTS clean install
     - mvn $MAVEN_CLI_OPTS docker:push
   only:
+    - master
     - /^release/.*$/
   artifacts:
     paths:
