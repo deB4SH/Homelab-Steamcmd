@@ -1,0 +1,53 @@
+image: docker:20.10
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+cache:
+  key: "$CI_COMMIT_BRANCH"
+  paths:
+    - .m2/repository/
+
+services:
+  - docker:20.10-dind
+
+before_script:
+  - docker info
+  - docker login registry.0x09.de:61001 -u $CIUSER -p $CITOKEN
+
+stages:
+  - pre
+  - build
+
+versionset:
+  stage: pre
+  image: maven:3.6.3-openjdk-16
+  tags:
+    - homelab
+  script:
+    - export versionNumber=$(echo ${CI_COMMIT_BRANCH} | sed -E 's/release\/([0-9a-zA-Z.\\-]+)/\1/')
+    - mvn $MAVEN_CLI_OPTS versions:set -DnewVersion=${versionNumber}
+  only:
+    - /^release/.*$/
+  artifacts:
+    paths:
+      - pom.xml
+    expire_in: 1 day
+
+build:
+  stage: build
+  image: oconnormi/dind-maven:latest
+  tags:
+    - homelab
+  script:
+    - mvn $MAVEN_CLI_OPTS clean install
+    - mvn $MAVEN_CLI_OPTS docker:push
+  only:
+    - /^release/.*$/
+  artifacts:
+    paths:
+      - pom.xml
+    expire_in: 1 day
