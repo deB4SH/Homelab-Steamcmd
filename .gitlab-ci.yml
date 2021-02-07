@@ -12,7 +12,7 @@ cache:
     - .m2/repository/
 
 services:
-  - docker:20.10-dind
+  - docker:dind
 
 before_script:
   - docker info
