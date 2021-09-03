@@ -1,5 +1,5 @@
 FROM ghcr.io/deb4sh/homelab-debian:0.10.10
-LABEL maintainer="hello@b4sh.de"
+LABEL maintainer="github@b4sh.de"
 # update container debian to latest patch files
 RUN dpkg --add-architecture i386
 RUN apt-get update && apt-get upgrade -y
